@@ -31,7 +31,7 @@ public class LinkedList<E> {
     private Node tail;
 
     public LinkedList(){
-        this.head=null;
+        this.head=new Node(null,null);
         this.size=0;
         this.tail=null;
     }
@@ -52,35 +52,63 @@ public class LinkedList<E> {
     }
 
     public void addFirst(E e){
-        Node newnode=new Node(e);
-        if (head==null){
-            head=newnode;
-        }else{
-            newnode.next=head.next;
-            head=newnode;
-        }
-        size++;
+        add(e,0);
     }
+
+    public E get(int index){
+        if (index<0||index>size){
+            throw  new IllegalArgumentException("get failed, Illegal index.");
+        }
+        Node cur=head.next;
+        for (int i=0;i<index;i++){
+            cur=cur.next;
+        }
+        return cur.e;
+    }
+
+    public E getFirst(){
+        return get(0);
+    }
+
+    public void set(int index,E e){
+        if (index<0||index>=size){
+            throw new IllegalArgumentException("update failed,Illegal index.");
+        }
+        Node cur=head.next;
+        for(int i=0;i<index;i++){
+            cur=cur.next;
+        }
+        cur.e=e;
+    }
+
+    public boolean contains(E e){
+        Node cur=head.next;
+        while (cur!=null){
+            if(cur.e.equals(e)){
+                return true;
+            }
+            cur=cur.next;
+        }
+        return false;
+    }
+
 
     public void add(E e,int index){
         if (index<0||index>size){
             throw  new IllegalArgumentException("add failed, Illegal index.");
         }
-        if (index==0){
-            addFirst(e);
-        }else{
-            Node prev=head;
-            for(int i=0;i<index-1;i++){
-                prev=prev.next;
-            }
-            Node newnode=new Node(e);
-            if(prev.next==null){
-                tail=newnode;
-            }
-            newnode.next=prev.next;
-            prev.next=newnode;
-            size++;
+        Node prev=head;
+        for(int i=0;i<index;i++){
+            prev=prev.next;
         }
+        Node newnode=new Node(e);
+        if(prev.next==null){
+            tail=newnode;
+        }
+        newnode.next=prev.next;
+        prev.next=newnode;
+        size++;
+
     }
 
     public void addLast(E e){
@@ -89,7 +117,7 @@ public class LinkedList<E> {
 
     @Override
     public String toString(){
-        Node temp=head;
+        Node temp=head.next;
         StringBuilder sb =new StringBuilder();
         sb.append("head [ ");
         while(temp!=null){
